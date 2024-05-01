@@ -9,29 +9,23 @@ generator client {
 }
 
 datasource db {
-  provider        = "mongodb"
-  url             = env("DATABASE_URL")
-  
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
 model ForecastCurrent {
-  id           String @id @default(auto()) @map("_id") @db.ObjectId
-  name         String
-  region       String
-  country      String
-  last_updated String
-  is_day      Int
-  humidity     Int
-  temp_c       Float
-  temp_f       Float
-  feelslike_c  Float
-  feelslike_f  Float
-  wind_degree  Float
-  wind_kph     Float
-  pressure_mb  Float
-  pressure_in  Float
-  precip_mm    Float
-  precip_in    Float
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  region    String
+  country   String
+  date      String
+  maxtemp_c Int
+  maxtemp_f Int
+  mintemp_c Int
+  mintemp_f Int
+  avgtemp_c Int
+  avgtemp_f Int
 
   @@map("forecastCurrent")
 }
+

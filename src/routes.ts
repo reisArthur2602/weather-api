@@ -1,4 +1,5 @@
 import { Router } from 'express';
-
+import * as weather from './controllers/forecast';
 export const router = Router();
-router.get("/", (req,res)=> console.log("Hello Word!"))
+
+router.get('/weather', weather.getByCity);

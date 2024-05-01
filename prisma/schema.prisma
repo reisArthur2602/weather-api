@@ -9,8 +9,9 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+  provider        = "mongodb"
+  url             = env("DATABASE_URL")
+  
 }
 
 model ForecastCurrent {
@@ -18,17 +19,19 @@ model ForecastCurrent {
   name         String
   region       String
   country      String
+  last_updated String
+  is_day      Int
+  humidity     Int
   temp_c       Float
   temp_f       Float
-  is_day       Float
-  last_updated Float
+  feelslike_c  Float
+  feelslike_f  Float
   wind_degree  Float
   wind_kph     Float
   pressure_mb  Float
   pressure_in  Float
   precip_mm    Float
   precip_in    Float
-  humidity     Float
-  feelslike_c  Float
-  feelslike_f  Float
+
+  @@map("forecastCurrent")
 }

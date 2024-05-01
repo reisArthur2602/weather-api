@@ -12,3 +12,23 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
+
+model ForecastCurrent {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  region       String
+  country      String
+  temp_c       Float
+  temp_f       Float
+  is_day       Float
+  last_updated Float
+  wind_degree  Float
+  wind_kph     Float
+  pressure_mb  Float
+  pressure_in  Float
+  precip_mm    Float
+  precip_in    Float
+  humidity     Float
+  feelslike_c  Float
+  feelslike_f  Float
+}

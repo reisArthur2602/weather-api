@@ -6,7 +6,7 @@ export const ForecastSchema = z.object({
       .trim()
       .split(' ')
       .map((word) => {
-        return word[0].toLocaleUpperCase().concat(word.substring(1));
+        return word.toLocaleLowerCase()
       }).join(" ");
   }),
 });

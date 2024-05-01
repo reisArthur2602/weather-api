@@ -5,7 +5,7 @@ import { ForecastCurrentData } from '../types/forecast';
 export const getCity = async (city: string) => {
   try {
     const data = await fetch(
-      `http://api.weatherapi.com/v1/current.json?key=${process.env.API_KEY}&q=${city}&aqi=no`
+      `http://api.weatherapi.com/v1/forecast.json?key=${process.env.API_KEY}&q=${city}&days=1&aqi=no&alerts=no`
     );
     const response = await data.json();
     return FormatWeather(response);
@@ -35,21 +35,15 @@ export const save = async (
     const result = await prismaClient.forecastCurrent.create({
       data: {
         name: data.name,
-        country: data.country,
         region: data.region,
-        is_day: data.is_day,
-        temp_c: data.temp_c,
-        temp_f: data.temp_f,
-        feelslike_c: data.feelslike_c,
-        feelslike_f: data.feelslike_f,
-        humidity: data.humidity,
-        precip_in: data.precip_in,
-        precip_mm: data.precip_mm,
-        pressure_in: data.pressure_in,
-        pressure_mb: data.pressure_mb,
-        wind_degree: data.wind_degree,
-        wind_kph: data.wind_kph,
-        last_updated: data.last_updated,
+        country: data.country,
+        date: data.date,
+        maxtemp_c: data.maxtemp_c,
+        maxtemp_f: data.maxtemp_f,
+        mintemp_c: data.mintemp_c,
+        mintemp_f: data.mintemp_c,
+        avgtemp_c: data.avgtemp_c,
+        avgtemp_f: data.avgtemp_f,
       },
     });
 

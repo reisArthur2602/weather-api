@@ -19,12 +19,12 @@ model ForecastCurrent {
   region    String
   country   String
   date      String
-  maxtemp_c Int
-  maxtemp_f Int
-  mintemp_c Int
-  mintemp_f Int
-  avgtemp_c Int
-  avgtemp_f Int
+  maxtemp_c Float
+  maxtemp_f Float
+  mintemp_c Float
+  mintemp_f Float
+  avgtemp_c Float
+  avgtemp_f Float
 
   @@map("forecastCurrent")
 }

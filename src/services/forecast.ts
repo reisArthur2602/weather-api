@@ -16,13 +16,13 @@ export const getCity = async (city: string) => {
 
 export const findCity = async (
   city: string
-): Promise<ForecastCurrentData[] | false> => {
+): Promise<ForecastCurrentData | false> => {
   try {
-    const result = await prismaClient.forecastCurrent.findMany({
+    const result = await prismaClient.forecastCurrent.findFirst({
       where: { name: city },
     });
 
-    return result.length === 0 ? false : result;
+    return result || false;
   } catch (error) {
     return false;
   }
@@ -42,6 +42,29 @@ export const save = async (
         maxtemp_f: data.maxtemp_f,
         mintemp_c: data.mintemp_c,
         mintemp_f: data.mintemp_c,
+        avgtemp_c: data.avgtemp_c,
+        avgtemp_f: data.avgtemp_f,
+      },
+    });
+
+    return result;
+  } catch (error) {
+    return false;
+  }
+};
+
+export const updateCity = async (
+  data: ForecastCurrentData
+): Promise<ForecastCurrentData | false> => {
+  try {
+    const result = await prismaClient.forecastCurrent.update({
+      where: { id: data.id },
+      data: {
+        date: data.date,
+        maxtemp_c: data.maxtemp_c,
+        maxtemp_f: data.maxtemp_f,
+        mintemp_c: data.mintemp_c,
+        mintemp_f: data.mintemp_f,
         avgtemp_c: data.avgtemp_c,
         avgtemp_f: data.avgtemp_f,
       },

@@ -6,10 +6,9 @@ export const getCurrentDate = () => {
   return `${year}-${month}-${day}`;
 };
 
-export const formatDate = (date: Date): string  => {
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
+export const formatDate = (date: Date): string => {
   const year = date.getFullYear();
-  return `${day}-${month}-${year}`;
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 };
-

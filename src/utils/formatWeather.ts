@@ -2,7 +2,7 @@ import { ForecastCurrentData } from '../types/forecast';
 
 export const FormatWeather = (data: any): ForecastCurrentData => {
   return {
-    name: data.location.name.toLocaleLowerCase(),
+    name: data.location.name,
     region: data.location.region,
     country: data.location.country,
     date: data.forecast.forecastday[0].date,

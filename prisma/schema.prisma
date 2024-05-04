@@ -18,7 +18,7 @@ model ForecastCurrent {
   name      String
   region    String
   country   String
-  date      String
+  date      DateTime
   maxtemp_c Float
   maxtemp_f Float
   mintemp_c Float

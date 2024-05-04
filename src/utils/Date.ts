@@ -12,3 +12,11 @@ export const formatDate = (date: Date): string => {
   const day = String(date.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 };
+
+export const diffDays = (date1: Date, date2: Date): string => {
+  const diffInMs = date2.getTime() - date1.getTime();
+
+  const diffInDays = diffInMs / (1000 * 3600 * 24);
+
+  return String(Math.round(diffInDays) + 1);
+};

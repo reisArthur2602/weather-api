@@ -17,6 +17,7 @@ export const FilterSchema = z.object({
     .transform((city) => {
       return city.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
     }),
-  startDate: z.coerce.date().transform((date) => formatDate(date)),
-  endDate: z.coerce.date().transform((date) => formatDate(date)),
+  startDate: z.coerce.date(),
+  endDate: z.coerce.date(),
 });
+// .transform((date) => formatDate(date))

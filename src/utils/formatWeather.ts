@@ -5,7 +5,7 @@ export const FormatWeather = (data: any): ForecastCurrentData => {
     name: data.location.name,
     region: data.location.region,
     country: data.location.country,
-    date: data.forecast.forecastday[0].date,
+    date: new Date(data.forecast.forecastday[0].date),
     maxtemp_c: data.forecast.forecastday[0].day.maxtemp_c,
     maxtemp_f: data.forecast.forecastday[0].day.maxtemp_f,
     mintemp_c: data.forecast.forecastday[0].day.mintemp_c,

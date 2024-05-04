@@ -31,12 +31,11 @@ export const getWeatherForecast = async (
     const forecasts: ForecastCurrentData[] = [];
 
     response.forecast.forecastday.forEach((weather: any) =>
-
       forecasts.push({
         name: response.location.name,
         country: response.location.country,
         region: response.location.region,
-        date: weather.date,
+        date: new Date(weather.date),
         maxtemp_c: weather.day.maxtemp_c,
         maxtemp_f: weather.day.maxtemp_f,
         mintemp_c: weather.day.mintemp_c,
@@ -70,8 +69,8 @@ export const findCity = async (
 
 export const findCitybyDate = async (
   city: string,
-  startDate: string,
-  endDate: string
+  startDate: Date,
+  endDate: Date
 ): Promise<ForecastCurrentData[] | false> => {
   try {
     const result = await db.forecastCurrent.findMany({
@@ -84,7 +83,7 @@ export const findCitybyDate = async (
       },
     });
 
-    return result || false;
+    return result.length > 0 ? result : false;
   } catch (error) {
     console.error('Erro ao obter dados do banco:', error);
     return false;

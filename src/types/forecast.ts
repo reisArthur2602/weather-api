@@ -1,8 +1,8 @@
 import { Prisma } from '@prisma/client';
-import { prismaClient } from '../database/prisma';
+import { db } from '../database/prisma';
 
 export type ForecastCurrentData = Prisma.Args<
-  typeof prismaClient.forecastCurrent,
+  typeof db.forecastCurrent,
   'create'
 >['data'];
 

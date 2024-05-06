@@ -1,21 +1,7 @@
 import { db } from '../database/prisma';
 import { FormatWeather } from '../utils/formatWeather';
 import { ForecastCurrentData } from '../types/forecast';
-
-export const getWeatherCurrent = async (
-  city: string
-): Promise<ForecastCurrentData | false> => {
-  try {
-    const data = await fetch(
-      `http://api.weatherapi.com/v1/forecast.json?key=${process.env.API_KEY}&q=${city}&days=1&aqi=no&alerts=no`
-    );
-    const response = await data.json();
-    return FormatWeather(response);
-  } catch (error) {
-    console.error('Erro ao obter dados da API:', error);
-    return false;
-  }
-};
+import { getCurrentDate } from '../utils/Date';
 
 export const getWeatherForecast = async (
   city: string
@@ -50,12 +36,14 @@ export const getWeatherForecast = async (
   }
 };
 
-export const findCity = async (
+export const findWeatherCurrent = async (
   city: string
 ): Promise<ForecastCurrentData | false> => {
   try {
+    const currentDate = new Date(getCurrentDate());
+
     const result = await db.forecastCurrent.findFirst({
-      where: { name: city },
+      where: { name: city, date: currentDate },
     });
 
     return result || false;
@@ -88,46 +76,12 @@ export const filterCity = async (
   }
 };
 
-export const save = async (
-  data: ForecastCurrentData
-): Promise<ForecastCurrentData | false> => {
-  try {
-    const result = await db.forecastCurrent.create({
-      data: {
-        ...data,
-      },
-    });
-    console.log('Dados salvos no banco de dados');
-    return result;
-  } catch (error) {
-    console.error('Erro ao salvar no banco de dados:', error);
-    return false;
-  }
-};
-
-export const updateCity = async (
-  data: ForecastCurrentData
-): Promise<ForecastCurrentData | false> => {
-  try {
-    const result = await db.forecastCurrent.update({
-      where: { id: data.id },
-      data: {
-        ...data,
-      },
-    });
-
-    return result;
-  } catch (error) {
-    return false;
-  }
-};
-
 export const updateDB = async (data: ForecastCurrentData[], city: string) => {
   try {
     await db.forecastCurrent.deleteMany({
       where: { name: city },
     });
-    await saveMany(data);
+    await saveForecast(data);
     console.log('Dados salvos no banco de dados');
   } catch (error) {
     console.error('Erro ao salvar no banco de dados:', error);
@@ -135,7 +89,7 @@ export const updateDB = async (data: ForecastCurrentData[], city: string) => {
   }
 };
 
-export const saveMany = async (data: ForecastCurrentData[]) => {
+export const saveForecast = async (data: ForecastCurrentData[]) => {
   try {
     await db.forecastCurrent.createMany({
       data: data,

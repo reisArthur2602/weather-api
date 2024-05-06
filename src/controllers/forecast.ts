@@ -1,7 +1,7 @@
 import { Request, RequestHandler, Response } from 'express';
 import * as forecast from '../services/forecast';
 import { CitySchema, FilterSchema } from '../schemas/forecast';
-import { diffDays, filterByDate, getCurrentDate } from '../utils/Date';
+import { diffDays} from '../utils/Date';
 
 export const getByCity: RequestHandler = async (
   req: Request,
@@ -10,33 +10,20 @@ export const getByCity: RequestHandler = async (
   const body = CitySchema.safeParse({ city: req.params.city });
   if (!body.success) return res.json({ error: 'Dado Inválido' });
 
-  const existingData = await forecast.findCity(body.data.city);
+  const city = body.data.city;
+
+  const existingData = await forecast.findWeatherCurrent(city);
 
   if (!existingData) {
-    const data = await forecast.getWeatherCurrent(body.data.city);
+    const data = await forecast.getWeatherForecast(city);
     if (data) {
-      const saved = await forecast.save({ ...data });
-      console.log('Dados salvos no banco de dados');
-      return res.json(saved);
+      await forecast.updateDB(data, city);
+      const result = await forecast.findWeatherCurrent(city);
+      return res.json(result);
     }
   }
-
-  if (existingData) {
-    const currentDate = getCurrentDate();
-    if (existingData.date !== currentDate) {
-      const data = await forecast.getWeatherCurrent(body.data.city);
-
-      if (data) {
-        const updated = await forecast.updateCity({
-          id: existingData.id,
-          ...data,
-        });
-        console.log('Dados da previsão do tempo atualizados no banco de dados');
-        return res.json(updated);
-      }
-    }
-    return res.json(existingData);
-  }
+  return res.json(existingData);
+  
 };
 
 export const getCityByFilter: RequestHandler = async (
@@ -54,7 +41,7 @@ export const getCityByFilter: RequestHandler = async (
   const startDate = body.data.startDate;
   const endDate = body.data.endDate;
   const city = body.data.city;
-  
+
   if (startDate && endDate) {
     const days = diffDays(startDate, endDate);
     if (!days) return res.json({ error: 'Data Inválida' });

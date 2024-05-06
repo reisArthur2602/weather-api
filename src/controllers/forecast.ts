@@ -1,8 +1,7 @@
 import { Request, RequestHandler, Response } from 'express';
 import * as forecast from '../services/forecast';
 import { CitySchema, FilterSchema } from '../schemas/forecast';
-import { getCurrentDate } from '../utils/getCurrentDate';
-import { diffDays } from '../utils/Date';
+import { diffDays, filterByDate, getCurrentDate } from '../utils/Date';
 
 export const getByCity: RequestHandler = async (
   req: Request,
@@ -55,23 +54,22 @@ export const getCityByFilter: RequestHandler = async (
   const startDate = body.data.startDate;
   const endDate = body.data.endDate;
   const city = body.data.city;
+  
+  if (startDate && endDate) {
+    const days = diffDays(startDate, endDate);
+    if (!days) return res.json({ error: 'Data Inválida' });
+  }
 
-  const diff = diffDays(startDate, endDate);
+  const existingData = await forecast.filterCity(city, startDate, endDate);
 
-  if (Number(diff) > 11)
-    return res.json({
-      error: 'escolha uma data de no maximo 10 dias de intervalo',
-    });
-
-  const existingData = await forecast.findCitybyDate(city, startDate, endDate);
-
-  if (existingData) {
-    return res.json(existingData);
-  } else {
-    const data = await forecast.getWeatherForecast(city, diff);
+  if (!existingData) {
+    const data = await forecast.getWeatherForecast(city);
     if (data) {
-      data.forEach(async (item) => await forecast.save({ ...item }));
-      return res.json(data);
+      await forecast.updateDB(data, city);
+      const filter = await forecast.filterCity(city, startDate, endDate);
+      return res.json(filter);
     }
   }
+
+  return res.json(existingData);
 };

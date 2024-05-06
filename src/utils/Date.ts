@@ -1,3 +1,5 @@
+import { ForecastCurrentData } from '../types/forecast';
+
 export const getCurrentDate = () => {
   const currentDate = new Date();
   const year = currentDate.getFullYear();
@@ -13,10 +15,24 @@ export const formatDate = (date: Date): string => {
   return `${year}-${month}-${day}`;
 };
 
-export const diffDays = (date1: Date, date2: Date): string => {
-  const diffInMs = date2.getTime() - date1.getTime();
+export const diffDays = (date1?: Date, date2?: Date): string | false => {
+  if (date1 && date2) {
+    const diffInMs = date2.getTime() - date1.getTime();
+    const diffInDays = Math.round(diffInMs / (1000 * 3600 * 24) + 1);
 
-  const diffInDays = diffInMs / (1000 * 3600 * 24);
-
-  return String(Math.round(diffInDays) + 1);
+    if (diffInDays > 8) return false;
+    console.log(diffInDays);
+    return String(diffInDays);
+  }
+  return false;
 };
+
+export function filterByDate(
+  forecasts: ForecastCurrentData[],
+  startdate: Date,
+  enddate: Date
+): ForecastCurrentData[] {
+  return forecasts.filter((forecast) => {
+    return forecast.date >= startdate && forecast.date <= enddate;
+  });
+}

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { formatDate } from '../utils/Date';
+// import { formatDate } from '../utils/Date';
 
 export const CitySchema = z.object({
   city: z
@@ -11,13 +11,13 @@ export const CitySchema = z.object({
 });
 
 export const FilterSchema = z.object({
+  startDate: z.coerce.date().optional(),
+  endDate: z.coerce.date().optional(),
   city: z
     .string()
     .trim()
     .transform((city) => {
       return city.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
     }),
-  startDate: z.coerce.date(),
-  endDate: z.coerce.date(),
 });
 // .transform((date) => formatDate(date))

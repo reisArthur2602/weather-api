@@ -18,13 +18,11 @@ export const getWeatherCurrent = async (
 };
 
 export const getWeatherForecast = async (
-  city: string,
-  days: string
+  city: string
 ): Promise<ForecastCurrentData[] | false> => {
-  console.log(city, days);
   try {
     const data = await fetch(
-      `http://api.weatherapi.com/v1/forecast.json?key=${process.env.API_KEY}&q=${city}&days=${days}&aqi=no&alerts=no`
+      `http://api.weatherapi.com/v1/forecast.json?key=${process.env.API_KEY}&q=${city}&days=8&aqi=no&alerts=no`
     );
     const response = await data.json();
 
@@ -67,20 +65,20 @@ export const findCity = async (
   }
 };
 
-export const findCitybyDate = async (
-  city: string,
-  startDate: Date,
-  endDate: Date
+export const filterCity = async (
+  city?: string,
+  startDate?: Date,
+  endDate?: Date
 ): Promise<ForecastCurrentData[] | false> => {
   try {
+    const filter = {
+      ...(startDate && { date: { gte: startDate } }),
+      ...(endDate && { date: { lte: endDate } }),
+      ...(city && { name: city }),
+    };
+
     const result = await db.forecastCurrent.findMany({
-      where: {
-        name: city,
-        date: {
-          gte: startDate,
-          lte: endDate,
-        },
-      },
+      where: filter,
     });
 
     return result.length > 0 ? result : false;
@@ -120,6 +118,31 @@ export const updateCity = async (
 
     return result;
   } catch (error) {
+    return false;
+  }
+};
+
+export const updateDB = async (data: ForecastCurrentData[], city: string) => {
+  try {
+    await db.forecastCurrent.deleteMany({
+      where: { name: city },
+    });
+    await saveMany(data);
+    console.log('Dados salvos no banco de dados');
+  } catch (error) {
+    console.error('Erro ao salvar no banco de dados:', error);
+    return false;
+  }
+};
+
+export const saveMany = async (data: ForecastCurrentData[]) => {
+  try {
+    await db.forecastCurrent.createMany({
+      data: data,
+    });
+    console.log('Dados salvos no banco de dados');
+  } catch (error) {
+    console.error('Erro ao salvar no banco de dados:', error);
     return false;
   }
 };

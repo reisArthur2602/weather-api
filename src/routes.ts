@@ -4,4 +4,4 @@ export const router = Router();
 
 router.get('/weather', weather.getCityByFilter);
 router.get('/weather/:city', weather.getByCity);
-router.post('/weather/:city', weather.searchCity);
+router.post('/weather', weather.searchCity);

@@ -72,4 +72,22 @@ export const searchCity: RequestHandler = async (req, res) => {
   const startDate = body.data.startDate;
   const endDate = body.data.endDate;
   const city = body.data.city;
+
+  if (startDate && endDate) {
+    const days = diffDays(startDate, endDate);
+    if (!days) return res.json({ error: 'Data Inválida' });
+  }
+
+  const existingData = await forecast.filterCity(city, startDate, endDate);
+
+  if (!existingData) {
+    const data = await forecast.getWeatherForecast(city);
+    if (data) {
+      await forecast.updateDB(data, city);
+      const filter = await forecast.filterCity(city, startDate, endDate);
+      return res.json(filter);
+    }
+  }
+
+  return res.json(existingData);
 };

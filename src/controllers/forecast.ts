@@ -1,7 +1,7 @@
 import { Request, RequestHandler, Response } from 'express';
 import * as forecast from '../services/forecast';
 import { CitySchema, FilterSchema } from '../schemas/forecast';
-import { diffDays} from '../utils/Date';
+import { diffDays } from '../utils/Date';
 
 export const getByCity: RequestHandler = async (
   req: Request,
@@ -23,7 +23,6 @@ export const getByCity: RequestHandler = async (
     }
   }
   return res.json(existingData);
-  
 };
 
 export const getCityByFilter: RequestHandler = async (
@@ -59,4 +58,18 @@ export const getCityByFilter: RequestHandler = async (
   }
 
   return res.json(existingData);
+};
+
+export const searchCity: RequestHandler = async (req, res) => {
+  const body = FilterSchema.safeParse({
+    city: req.body.city,
+    startDate: req.body.startDate,
+    endDate: req.body.endDate,
+  });
+
+  if (!body.success) return res.json({ error: 'Dado Inválido' });
+
+  const startDate = body.data.startDate;
+  const endDate = body.data.endDate;
+  const city = body.data.city;
 };

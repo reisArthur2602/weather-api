@@ -1,5 +1,5 @@
 import { db } from '../database/prisma';
-import { FormatWeather } from '../utils/formatWeather';
+
 import { ForecastCurrentData } from '../types/forecast';
 import { getCurrentDate } from '../utils/Date';
 

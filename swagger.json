@@ -1,0 +1,84 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Weather Api",
+    "description": "API de previsão do tempo",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/weather:city": {
+      "get": {
+        "summary": "Busca a previsão do tempo para uma cidade específica e data específica, caso não haja dados salvos , consulta uma API externa e atualiza o banco de dados",
+        "parameters": [
+          {
+            "name": "city",
+            "in": "path",
+            "description": "Nome da cidade para obter a previsão do tempo",
+            "required": true,
+            "type": "string"
+          }
+        ]
+      }
+    },
+    "/weather/filter": {
+      "get": {
+        "summary": "Busca a previsão do tempo para uma cidade específica e data específica, caso não haja dados salvos , consulta uma API externa e atualiza o banco de dados",
+        "parameters": [
+          {
+            "name": "city",
+            "in": "query",
+            "description": "Nome da cidade para obter a previsão do tempo ",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "description": "Data limite que deseja buscar as previsões a partir do dia de hoje.(formato YYYY-MM-DD)",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "description": "Data limite que deseja buscar as previsões a partir do dia de hoje. (formato YYYY-MM-DD)",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          }
+        ]
+      }
+    },
+    "/weather/search": {
+      "post": {
+        "summary": "Busca previsões e atualiza o banco de dados",
+        "parameters": [
+          {
+            "name": "city",
+            "in": "body",
+            "description": "Nome da cidade para obter a previsão do tempo",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "body",
+            "description": "Data limite que deseja buscar as previsões a partir do dia de hoje.(formato YYYY-MM-DD)",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "endDate",
+            "in": "body",
+            "description": "Data limite que deseja buscar as previsões a partir do dia de hoje.(formato YYYY-MM-DD)",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          }
+        ]
+      }
+    }
+  }
+}

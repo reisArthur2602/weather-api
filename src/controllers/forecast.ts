@@ -1,7 +1,7 @@
 import { Request, RequestHandler, Response } from 'express';
 import * as forecast from '../services/forecast';
 import { CitySchema, FilterSchema } from '../schemas/forecast';
-import { diffDays } from '../utils/Date';
+import { diffDays, filterByDate } from '../utils/Date';
 
 export const getByCity: RequestHandler = async (
   req: Request,
@@ -52,7 +52,11 @@ export const getCityByFilter: RequestHandler = async (
     const data = await forecast.getWeatherForecast(city);
     if (data) {
       await forecast.updateDB(data, city);
-      const filter = await forecast.filterCity(city, startDate, endDate);
+      const filter = await forecast.filterCity(
+        data[0].name,
+        startDate,
+        endDate
+      );
       return res.json(filter);
     }
   }
@@ -83,8 +87,12 @@ export const searchCity: RequestHandler = async (req, res) => {
   if (!existingData) {
     const data = await forecast.getWeatherForecast(city);
     if (data) {
-      await forecast.updateDB(data, city);
-      const filter = await forecast.filterCity(city, startDate, endDate);
+      await forecast.updateDB(data, data[0].name);
+      const filter = await forecast.filterCity(
+        data[0].name,
+        startDate,
+        endDate
+      );
       return res.json(filter);
     }
   }

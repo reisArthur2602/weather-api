@@ -21,7 +21,7 @@ export const diffDays = (date1?: Date, date2?: Date): string | false => {
     const diffInDays = Math.round(diffInMs / (1000 * 3600 * 24) + 1);
 
     if (diffInDays > 8) return false;
-    console.log(diffInDays);
+
     return String(diffInDays);
   }
   return false;
@@ -29,10 +29,17 @@ export const diffDays = (date1?: Date, date2?: Date): string | false => {
 
 export function filterByDate(
   forecasts: ForecastCurrentData[],
-  startdate: Date,
-  enddate: Date
+  startdate?: Date,
+  enddate?: Date
 ): ForecastCurrentData[] {
   return forecasts.filter((forecast) => {
-    return forecast.date >= startdate && forecast.date <= enddate;
+    if (startdate && !enddate) {
+      return forecast.date >= startdate;
+    } else if (!startdate && enddate) {
+      return forecast.date >= enddate;
+    } else if (startdate && enddate) {
+      return forecast.date >= startdate && forecast.date <= enddate;
+    }
+    return forecasts;
   });
 }

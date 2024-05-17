@@ -54,20 +54,22 @@ export const findWeatherCurrent = async (
 };
 
 export const filterCity = async (
-  city?: string,
+  city: string,
   startDate?: Date,
   endDate?: Date
 ): Promise<ForecastCurrentData[] | false> => {
   try {
     const filter = {
-      ...(startDate && { date: { gte: startDate } }),
-      ...(endDate && { date: { lte: endDate } }),
+      ...(startDate && endDate && { date: { gte: startDate, lte: endDate } }),
+      ...(startDate && !endDate && { date: { gte: startDate } }),
+      ...(endDate && !startDate && { date: { lte: endDate } }),
       ...(city && { name: city }),
     };
 
     const result = await db.forecastCurrent.findMany({
       where: filter,
     });
+    console.log(filter);
 
     return result.length > 0 ? result : false;
   } catch (error) {

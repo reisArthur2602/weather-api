@@ -1,7 +1,7 @@
 import { Request, RequestHandler, Response } from 'express';
 import * as forecast from '../services/forecast';
 import { CitySchema, FilterSchema } from '../schemas/forecast';
-import { diffDays, filterByDate } from '../utils/Date';
+import { diffDays} from '../utils/Date';
 
 export const getByCity: RequestHandler = async (
   req: Request,

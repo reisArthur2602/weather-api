@@ -27,19 +27,5 @@ export const diffDays = (date1?: Date, date2?: Date): string | false => {
   return false;
 };
 
-export function filterByDate(
-  forecasts: ForecastCurrentData[],
-  startdate?: Date,
-  enddate?: Date
-): ForecastCurrentData[] {
-  return forecasts.filter((forecast) => {
-    if (startdate && !enddate) {
-      return forecast.date >= startdate;
-    } else if (!startdate && enddate) {
-      return forecast.date >= enddate;
-    } else if (startdate && enddate) {
-      return forecast.date >= startdate && forecast.date <= enddate;
-    }
-    return forecasts;
-  });
-}
+
+

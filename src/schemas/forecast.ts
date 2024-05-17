@@ -21,5 +21,3 @@ export const FilterSchema = z.object({
     }),
 });
 
-
-// .transform((date) => formatDate(date))
